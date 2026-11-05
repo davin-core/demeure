@@ -51,7 +51,7 @@ Serve `frontend/dist` through a real production web server:
 2. Reverse-proxy `/api/*` to the API, preserving the API path, cookies, status
    codes, content types, `Cache-Control`, `Retry-After` and request headers.
 3. Serve static assets normally; rewrite frontend routes such as `/login` and
-   `/landlord` to `index.html`. Never rewrite API failures to frontend HTML.
+   `/app/dashboard` and `/landlord` to `index.html`. Never rewrite API failures to frontend HTML.
 4. Set the backend production environment, permitted hosts, PostgreSQL connection,
    SMTP and durable Data Protection keys as described in
    [authentication](authentication.md). Secure session cookies require HTTPS.
@@ -119,6 +119,9 @@ layout. The backend controls email verification, lockout and rate limiting.
 protocol-relative, nested, query-bearing and unauthorized destinations are
 ignored. With no eligible portal the user returns to `/public`; platform-only
 administrators go to explicit `/administration`.
+Owners/managers default to `/app/dashboard`; the exact legacy `/landlord`
+destination resolves to that canonical route. Dashboard query-bearing return
+destinations remain disallowed.
 
 Anonymous portal gates now offer a login link retaining the requested portal.
 They remain inline sign-in-required states rather than automatic redirects,
@@ -214,7 +217,11 @@ response rejection and authenticated API 401 removal of protected content. These
 fixtures are not production data or application code. Login form labels/errors,
 focus and 320-1440px overflow checks passed.
 
-Outstanding: registration/recovery screens and business pages remain intentionally
+The [landlord dashboard](dashboard.md) now consumes the shared client for real
+organization/property-scoped summaries, with date filters and chart contracts.
+No page contains its own fetch implementation.
+
+Outstanding: registration/recovery screens and business CRUD pages remain intentionally
 unimplemented; PostgreSQL live tests still require a server. Production HTTPS,
 reverse-proxy configuration, SMTP and durable Data Protection are deployment tasks.
 

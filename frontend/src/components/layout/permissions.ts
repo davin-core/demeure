@@ -4,7 +4,7 @@ export type WorkspaceKind = 'landlord' | 'tenant' | 'contractor' | 'administrati
 export type WorkspaceNavigationItem = { label: string; href?: string; description?: string }
 
 export const workspaceDefinitions: Record<WorkspaceKind, { title: string; path: string; description: string }> = {
-  landlord: { title: 'Landlord dashboard', path: '/landlord', description: 'Your organization, clearly in view.' },
+  landlord: { title: 'Landlord dashboard', path: '/app/dashboard', description: 'Your organization, clearly in view.' },
   tenant: { title: 'Tenant portal', path: '/tenant', description: 'A considered space for your tenancy.' },
   contractor: { title: 'Contractor portal', path: '/contractor', description: 'A focused space for assigned work.' },
   administration: { title: 'Administration', path: '/administration', description: 'Explicit, controlled platform administration.' },
@@ -36,7 +36,7 @@ export function availableWorkspaces(session: Session) {
 }
 
 export function workspaceNavigation(kind: WorkspaceKind, membership?: Membership): WorkspaceNavigationItem[] {
-  const home = { label: 'Workspace', href: workspaceDefinitions[kind].path }
+  const home = { label: kind === 'landlord' ? 'Dashboard' : 'Workspace', href: workspaceDefinitions[kind].path }
   if (kind === 'administration') return [home, ...['Organizations', 'Users', 'Audited platform access'].map((label) => ({ label }))]
   if (!membership || !membershipAllows(kind, membership)) return []
   switch (kind) {

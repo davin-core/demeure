@@ -1,5 +1,11 @@
 # Demeure API conventions
 
+Landlord reporting is available at `GET /api/v1/dashboard` (compatible
+`/api/dashboard`) with organization selection, inclusive date/property filters,
+live membership and assignment scope, no-store responses and Problem Details.
+See [dashboard reporting](dashboard.md) for exact financial definitions, bounds
+and response semantics.
+
 The API uses .NET 10 minimal APIs, not MVC controllers. Conventions are shared
 through route groups, endpoint metadata, middleware, Application query contracts
 and one EF query helper. No controller hierarchy, mediator, versioning framework

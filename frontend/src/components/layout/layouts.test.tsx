@@ -39,7 +39,7 @@ describe('permission-aware layouts', () => {
   it('filters multiple memberships by the requested portal without leaking another role', () => {
     const mixed = { ...session, memberships: [membership, { ...membership, organizationId: '33333333-3333-4333-8333-333333333333', role: 'Tenant' }] }
     expect(eligibleMemberships('landlord', mixed)).toEqual([membership])
-    expect(availableWorkspaces(mixed).map((item) => item.path)).toEqual(['/landlord', '/tenant'])
+    expect(availableWorkspaces(mixed).map((item) => item.path)).toEqual(['/app/dashboard', '/tenant'])
   })
   it('limits navigation to the supported resource scopes', () => {
     const manager = workspaceNavigation('landlord', { ...membership, role: 'PropertyManager' })

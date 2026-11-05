@@ -4,6 +4,7 @@ import { PublicLayout } from '@/components/layout/public-layout'
 import { SessionProvider } from '@/components/layout/session-provider'
 import { AdministrationLayout, ContractorLayout, LandlordLayout, TenantLayout } from '@/components/layout/workspace-layout'
 import { workspaceDefinitions, type WorkspaceKind } from '@/components/layout/permissions'
+import DashboardPage from './dashboard'
 
 function LayoutLanding({ kind }: { kind: WorkspaceKind | 'public' }) {
   const title = kind === 'public' ? 'Public website' : workspaceDefinitions[kind].title
@@ -22,7 +23,8 @@ function LayoutLanding({ kind }: { kind: WorkspaceKind | 'public' }) {
 }
 
 export default function ApplicationLayouts({ kind }: { kind: WorkspaceKind | 'public' }) {
-  const content = <LayoutLanding kind={kind} />
+  const [dashboardPreferences, setDashboardPreferences] = useState<DashboardPreferences>()
+  const content = kind === 'landlord' ? <DashboardPage initialPreferences={dashboardPreferences} onPreferencesChange={setDashboardPreferences} /> : <LayoutLanding kind={kind} />
   return <SessionProvider workspace={kind === 'public' ? undefined : kind}>{kind === 'public' ? <PublicLayout>{content}</PublicLayout>
     : kind === 'landlord' ? <LandlordLayout>{content}</LandlordLayout>
     : kind === 'tenant' ? <TenantLayout>{content}</TenantLayout>
@@ -30,3 +32,5 @@ export default function ApplicationLayouts({ kind }: { kind: WorkspaceKind | 'pu
     : <AdministrationLayout>{content}</AdministrationLayout>}
   </SessionProvider>
 }
+import { useState } from 'react'
+import type { DashboardPreferences } from '@/lib/dashboard-api'

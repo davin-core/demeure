@@ -56,6 +56,20 @@ internal static class OpenApiConventions
                 if (context.Description.ActionDescriptor.EndpointMetadata.OfType<EnableRateLimitingAttribute>().Any())
                     operation.Responses.TryAdd("429", Problem("Rate limit exceeded; see Retry-After", document));
                 operation.Parameters ??= [];
+                if (context.Description.RelativePath == "api/v1/dashboard")
+                {
+                    foreach (var (name, description) in new[]
+                    {
+                        ("startDate", "Inclusive UTC financial/activity start date, yyyy-MM-dd; defaults to first day of current UTC month."),
+                        ("endDate", "Inclusive end date, yyyy-MM-dd; defaults to last day of current UTC month. Maximum interval five calendar years."),
+                        ("propertyId", "Optional GUID of a non-archived authorized property. Managers may select only assigned properties.")
+                    })
+                        operation.Parameters.Add(new OpenApiParameter
+                        {
+                            Name = name, In = ParameterLocation.Query, Required = false, Description = description,
+                            Schema = new OpenApiSchema { Type = JsonSchemaType.String, Format = name == "propertyId" ? "uuid" : "date" }
+                        });
+                }
                 if (authorization.Any(value => value.Policy == AuthorizationPolicies.OrganizationResource))
                     operation.Parameters.Add(Header("X-Organization-Id",
                         "Authorized organization selector. Required when multiple memberships exist; never grants membership."));

@@ -16,6 +16,18 @@
 @paymentId = replace-with-payment-id
 @maintenanceId = replace-with-maintenance-request-id
 
+### Landlord dashboard: current UTC month defaults, explicit organization required.
+GET {{baseUrl}}/api/v1/dashboard
+X-Organization-Id: {{organizationId}}
+
+### Inclusive date/property filters (maximum five calendar years).
+GET {{baseUrl}}/api/v1/dashboard?startDate=2026-02-01&endDate=2026-02-28&propertyId={{propertyId}}
+X-Organization-Id: {{organizationId}}
+
+### Invalid dashboard dates return validation Problem Details.
+GET {{baseUrl}}/api/v1/dashboard?startDate=2026-02-30
+X-Organization-Id: {{organizationId}}
+
 ### Readiness (aggregate dependency checks)
 GET {{baseUrl}}/api/health
 Accept: application/json

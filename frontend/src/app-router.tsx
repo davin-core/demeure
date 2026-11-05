@@ -6,7 +6,7 @@ const DesignSystem = lazy(() => import('./pages/design-system'))
 const ApplicationLayouts = lazy(() => import('./pages/application-layouts'))
 const LoginPage = lazy(() => import('./pages/login'))
 const layouts: Record<string, WorkspaceKind | 'public'> = {
-  '/public': 'public', '/landlord': 'landlord', '/tenant': 'tenant', '/contractor': 'contractor', '/administration': 'administration',
+  '/public': 'public', '/app/dashboard': 'landlord', '/landlord': 'landlord', '/tenant': 'tenant', '/contractor': 'contractor', '/administration': 'administration',
 }
 
 export default function AppRouter() {

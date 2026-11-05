@@ -2,15 +2,15 @@
 
 ## Scope and routes
 
-These are reusable page frames, not business screens. Each landing route explains
-that its layout is ready and no business pages have been implemented. There are
-no seeded users, property statistics, fake notification records or new business
-API endpoints.
+These are reusable page frames. Public, tenant, contractor and administration
+landing routes remain layout-only. The landlord frame now hosts the live
+[dashboard](dashboard.md), with real scoped reporting rather than sample data.
+There are no seeded users or fake notification records.
 
 | Route | Layout | Access |
 | --- | --- | --- |
 | `/public` | Public website header, content slot, footer, mobile drawer | Everyone; authenticated workspace links are permission-aware |
-| `/landlord` | Landlord dashboard sidebar and top bar | OrganizationOwner or PropertyManager in the selected organization |
+| `/app/dashboard` (alias `/landlord`) | Landlord dashboard sidebar and top bar with live reporting | OrganizationOwner or PropertyManager in the selected organization |
 | `/tenant` | Tenant portal sidebar and top bar | Tenant in the selected organization |
 | `/contractor` | Contractor portal sidebar and top bar | Contractor in the selected organization |
 | `/administration` | Administration sidebar and top bar | Exact global SuperAdministrator role |
@@ -20,7 +20,8 @@ Trailing slashes are supported. `/` remains the real developer API workspace;
 existing workspace fallback; nested business routes are not registered.
 The [integration stage](frontend-integration.md) adds `/login` and sign-in links
 to anonymous portal gates, plus shared transport and API-triggered session-expiry
-handling; this preserves the layout-only scope for business routes.
+handling. The subsequent [dashboard stage](dashboard.md) adds scoped landlord
+reporting; other business routes remain unimplemented.
 Production hosting must serve `index.html` for frontend paths while preserving
 API routing.
 
@@ -182,7 +183,7 @@ four anonymous portals, while public content remains usable and the original
 workspace reports real healthy API status. No test accounts were created.
 
 Registration/recovery screens, notification delivery/feed, profile editing,
-business pages, nested navigation and membership provisioning remain unimplemented
+business CRUD pages, nested navigation and membership provisioning remain unimplemented
 by design. Actual screen-reader and real-device testing are still recommended
 before release. Fully authenticated cookie/login verification was subsequently
 completed in the [integration stage](frontend-integration.md) against an isolated

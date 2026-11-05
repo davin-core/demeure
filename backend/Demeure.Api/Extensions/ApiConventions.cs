@@ -15,10 +15,12 @@ internal static class ApiConventions
         var current = endpoints.MapGroup(CurrentPrefix);
         current.MapAuthenticationEndpoints();
         current.MapResourceEndpoints();
+        current.MapDashboardEndpoints();
 
         var compatibility = endpoints.MapGroup("/api").ExcludeFromDescription();
         compatibility.MapAuthenticationEndpoints();
         compatibility.MapResourceEndpoints();
+        compatibility.MapDashboardEndpoints();
         ((IEndpointConventionBuilder)compatibility).Finally(builder =>
         {
             var name = builder.Metadata.OfType<IEndpointNameMetadata>().LastOrDefault()?.EndpointName;

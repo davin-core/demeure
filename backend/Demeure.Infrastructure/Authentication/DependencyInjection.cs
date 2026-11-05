@@ -24,6 +24,8 @@ public static class DependencyInjection
         services.AddScoped<Demeure.Infrastructure.Authorization.OrganizationDataTransaction>();
         services.AddScoped<Demeure.Application.Common.Authorization.IResourceReader,
             Demeure.Infrastructure.Authorization.ResourceReader>();
+        services.AddScoped<Demeure.Application.Modules.Reporting.Contracts.IDashboardReader,
+            Demeure.Infrastructure.Authorization.DashboardReader>();
         services.AddIdentity<IdentityAccount, IdentityRole<Guid>>(options =>
         {
             options.User.RequireUniqueEmail = true;

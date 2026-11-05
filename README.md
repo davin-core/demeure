@@ -6,7 +6,8 @@ architecture, EF Core Code First persistence, Identity authentication, operation
 developer connectivity screen and interactive frontend design system. PostgreSQL is the production target; SQLite is
 available locally. Protected read-only resource endpoints enforce organization,
 property-assignment and self-service scopes. The frontend has real cookie login
-and shared typed API clients. Business CRUD, registration/recovery screens and
+and shared typed API clients, plus a live landlord dashboard at `/app/dashboard`.
+Business CRUD, registration/recovery screens and
 production seed data are not implemented.
 
 ## Structure
@@ -30,11 +31,12 @@ docs/
   design-system.md         Visual tokens, reusable components and accessibility conventions
   layouts.md               Public and permission-aware portal layouts, session and menus
   frontend-integration.md  Shared clients, login, pagination and deployment conventions
+  dashboard.md             Dashboard metric definitions, reporting scope and verification
 frontend/
   src/
     components/ui/         Locally owned shadcn/ui components
     components/layout/     Shared brand, session, menus and responsive application layouts
-    pages/                 Design-system gallery and layout-only portal landing routes
+    pages/                 Login, live landlord dashboard, design gallery and portal layouts
     lib/                   API client and shared UI utilities
     App.tsx                Developer connectivity screen
   components.json          shadcn/ui configuration
@@ -87,11 +89,14 @@ The original API workspace remains at `/`. See the
 [design-system guide](docs/design-system.md) for usage, accessibility, the file
 inventory and production SPA fallback configuration.
 
-Application layouts are available at `/public`, `/landlord`, `/tenant`,
+Application layouts are available at `/public`, `/app/dashboard` (alias `/landlord`), `/tenant`,
 `/contractor` and `/administration`. Public content is anonymous; portals use the
 real cookie session and organization/global roles. Without a session, portals
 show a sign-in-required state with a link to `/login`.
-Permitted business destinations are disabled and labeled Coming soon. See the
+The landlord dashboard uses real scoped backend metrics, date/property filters,
+charts, record activity and derived alerts. Other permitted business destinations
+are disabled and labeled Coming soon. See the [dashboard guide](docs/dashboard.md)
+for metric definitions and architectural decisions, and the
 [layout guide](docs/layouts.md) for access, organization switching, menus and
 the file inventory.
 
