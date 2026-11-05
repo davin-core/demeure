@@ -1,0 +1,9 @@
+{
+  "name": "demeure-api-documentation",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Locally served development-only Swagger UI assets.",
+  "dependencies": {
+    "swagger-ui-dist": "5.34.1"
+  }
+}

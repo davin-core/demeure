@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/backend/">
+    <Project Path="backend/Demeure.Api/Demeure.Api.csproj" />
+    <Project Path="backend/Demeure.Application/Demeure.Application.csproj" />
+    <Project Path="backend/Demeure.Domain/Demeure.Domain.csproj" />
+    <Project Path="backend/Demeure.Infrastructure/Demeure.Infrastructure.csproj" />
+    <Project Path="backend/Demeure.Tests/Demeure.Tests.csproj" />
+  </Folder>
+</Solution>

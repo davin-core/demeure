@@ -1,0 +1,214 @@
+@baseUrl = http://localhost:5076
+@csrfToken = replace-with-token-from-csrf-response
+@email = replace-with-your-email
+@password = replace-with-strong-unique-password
+@userId = replace-with-registration-user-id
+@verificationToken = replace-with-token-from-verification-email
+@resetToken = replace-with-token-from-reset-email
+@newPassword = replace-with-new-strong-unique-password
+@organizationId = replace-with-authorized-organization-id
+@platformOrganizationId = replace-with-explicit-platform-target-id
+@propertyId = replace-with-property-id
+@unitId = replace-with-unit-id
+@tenantId = replace-with-tenant-id
+@applicationId = replace-with-rental-application-id
+@leaseId = replace-with-lease-id
+@paymentId = replace-with-payment-id
+@maintenanceId = replace-with-maintenance-request-id
+
+### Readiness (aggregate dependency checks)
+GET {{baseUrl}}/api/health
+Accept: application/json
+
+### Liveness (process only)
+GET {{baseUrl}}/api/health/live
+Accept: application/json
+
+### OpenAPI (Development only)
+GET {{baseUrl}}/openapi/v1.json
+Accept: application/json
+
+### CSRF bootstrap: retain cookies and update csrfToken from the JSON response.
+### Run this again after login/logout, before the next write.
+GET {{baseUrl}}/api/v1/auth/csrf
+Accept: application/json
+
+### Register a new owner and organization (does not sign in).
+POST {{baseUrl}}/api/v1/auth/register
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "displayName": "Replace with your name",
+  "organizationName": "Replace with your organization",
+  "organizationSlug": "replace-with-unique-slug"
+}
+
+### Resend verification (generic accepted response).
+POST {{baseUrl}}/api/v1/auth/verification-email
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "email": "{{email}}" }
+
+### Verify using the actual delivered email token.
+POST {{baseUrl}}/api/v1/auth/confirm-email
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "userId": "{{userId}}", "token": "{{verificationToken}}" }
+
+### Login: retain the HttpOnly cookie; bootstrap CSRF again afterwards.
+POST {{baseUrl}}/api/v1/auth/login
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### Current account and authorized active memberships.
+GET {{baseUrl}}/api/v1/auth/session
+Accept: application/json
+
+### Request password reset (generic accepted response).
+POST {{baseUrl}}/api/v1/auth/forgot-password
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "email": "{{email}}" }
+
+### Reset using the actual delivered token; revokes existing sessions.
+POST {{baseUrl}}/api/v1/auth/reset-password
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "email": "{{email}}", "token": "{{resetToken}}", "newPassword": "{{newPassword}}" }
+
+### Clear this browser session; bootstrap CSRF again afterwards.
+POST {{baseUrl}}/api/v1/auth/logout
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Revoke all account sessions; requires login and a fresh CSRF token.
+POST {{baseUrl}}/api/v1/auth/logout-all
+X-CSRF-TOKEN: {{csrfToken}}
+
+### Read an authorized property (requires retained session cookie).
+GET {{baseUrl}}/api/v1/properties/{{propertyId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized unit.
+GET {{baseUrl}}/api/v1/units/{{unitId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized resident profile.
+GET {{baseUrl}}/api/v1/tenants/{{tenantId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized rental application.
+GET {{baseUrl}}/api/v1/rental-applications/{{applicationId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized lease.
+GET {{baseUrl}}/api/v1/leases/{{leaseId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized lease payment.
+GET {{baseUrl}}/api/v1/payments/{{paymentId}}
+X-Organization-Id: {{organizationId}}
+
+### Read an authorized maintenance job.
+GET {{baseUrl}}/api/v1/maintenance-requests/{{maintenanceId}}
+X-Organization-Id: {{organizationId}}
+
+### Missing/unassigned/foreign property IDs return the same 404.
+GET {{baseUrl}}/api/v1/properties/00000000-0000-0000-0000-000000000001
+X-Organization-Id: {{organizationId}}
+
+### Platform reads require SuperAdministrator, fresh CSRF and a reason.
+### The target route does not elevate ordinary organization endpoints.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/properties/{{propertyId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform unit read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/units/{{unitId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform resident read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/tenants/{{tenantId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform rental application read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/rental-applications/{{applicationId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform lease read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/leases/{{leaseId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform payment read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/payments/{{paymentId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Explicitly audited platform maintenance read.
+POST {{baseUrl}}/api/v1/platform/organizations/{{platformOrganizationId}}/maintenance-requests/{{maintenanceId}}/access
+Content-Type: application/json
+X-CSRF-TOKEN: {{csrfToken}}
+
+{ "reason": "Investigating an approved support request" }
+
+### Paged properties: page size is bounded; status is an exact enum name.
+GET {{baseUrl}}/api/v1/properties?page=1&pageSize=20&status=Active&sortBy=createdAt&sortDirection=desc
+X-Organization-Id: {{organizationId}}
+
+### Paged units.
+GET {{baseUrl}}/api/v1/units?pageSize=20&status=Available&sortBy=id
+X-Organization-Id: {{organizationId}}
+
+### Paged residents, filtered to the caller's authorized scope.
+GET {{baseUrl}}/api/v1/tenants?pageSize=20&status=Active
+X-Organization-Id: {{organizationId}}
+
+### Paged rental applications.
+GET {{baseUrl}}/api/v1/rental-applications?pageSize=20&status=Draft
+X-Organization-Id: {{organizationId}}
+
+### Paged leases.
+GET {{baseUrl}}/api/v1/leases?pageSize=20&sortBy=status
+X-Organization-Id: {{organizationId}}
+
+### Paged lease payments.
+GET {{baseUrl}}/api/v1/payments?pageSize=20&status=Pending
+X-Organization-Id: {{organizationId}}
+
+### Paged maintenance jobs.
+GET {{baseUrl}}/api/v1/maintenance-requests?pageSize=20&status=Open
+X-Organization-Id: {{organizationId}}
+
+### Invalid pagination returns 400 validation Problem Details, not a silent cap.
+GET {{baseUrl}}/api/v1/properties?pageSize=101
+X-Organization-Id: {{organizationId}}
+
+### Unversioned compatibility alias (same cookies, authorization and response).
+GET {{baseUrl}}/api/auth/session
+
+### Development-only interactive documentation.
+GET {{baseUrl}}/swagger/index.html
